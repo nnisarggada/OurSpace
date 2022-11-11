@@ -30,7 +30,7 @@ int main()
         string interests = fastWriter.write(actualJson[i]["Interests"]);
 
         //Search by name
-        string key = "a";
+        string key = "nnisarg";
         string tempName = name;
         boost::algorithm::to_lower(tempName);
         boost::algorithm::to_lower(key);
