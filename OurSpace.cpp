@@ -23,14 +23,14 @@ int main()
     //Converting JSON to String
     for (int i=0; i < 7; i++)
     {
-        string name = fastWriter.write(actualJson[i]["Full Name"]);
+        string name = fastWriter.write(actualJson[i]["Name"]);
         string sap_id = fastWriter.write(actualJson[i]["SAP ID"]);
         string gender = fastWriter.write(actualJson[i]["Gender"]);
         string date_of_birth = fastWriter.write(actualJson[i]["Date Of Birth"]);
         string interests = fastWriter.write(actualJson[i]["Interests"]);
 
         //Search by name
-        string key = "NNISARG";
+        string key = "a";
         string tempName = name;
         boost::algorithm::to_lower(tempName);
         boost::algorithm::to_lower(key);
