@@ -1,3 +1,6 @@
+#Custom
+*.json
+
 # Prerequisites
 *.d
 
