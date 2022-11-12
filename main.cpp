@@ -21,7 +21,7 @@ int main()
 
     int count = 0;
     //Converting JSON to String
-    for (int i=0; i < 7; i++)
+    for (int i=0; i < 100; i++)
     {
         string name = fastWriter.write(actualJson[i]["Name"]);
         string sap_id = fastWriter.write(actualJson[i]["SAP ID"]);
