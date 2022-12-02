@@ -85,6 +85,7 @@ int welcome()
     cout << "5 - Program\n";
     cout << "6 - Branch\n";
     cout << "7 - Commitees\n";
+    cout << "8 - Students in more than 2 commitees\n";
     cout << "\n";
     cout << "Type 10 to EXIT\n";
     cout << "\n";
@@ -167,6 +168,8 @@ void search(string field)
 
 int main()
 {
+    bool f = false;
+    int c = 0;
     init();
     Clear();
     int choice = welcome();
@@ -204,6 +207,33 @@ int main()
 
         case 7:
             search("commitees");
+            break;
+
+        case 8:
+            for (int i = 0; i < len; i++)
+            {
+                if (e[i].noOfCommitees > 2)
+                {
+                    f = true;
+                    c++;
+                    cout << endl;
+                    cout << endl;
+                    cout << c << ". " << endl;
+                    cout << endl;
+                    cout << "Name: " << e[i].name << endl;
+                    cout << "SAP ID: " << e[i].sapID << endl;
+                    cout << "Gender: " << e[i].gender << endl;
+                    cout << "Date Of Birth: " << e[i].dateOfBirth << endl;
+                    cout << "Interests: " << e[i].interests << endl;
+                    cout << "Program: " << e[i].program << endl;
+                    cout << "Branch: " << e[i].branch<< endl;
+                    cout << "Commitees: " << e[i].commitees << endl;
+                }
+            }
+            if (!f)
+            { 
+                cout << "No students matching the search :/\n\n";
+            }
             break;
 
         default:
