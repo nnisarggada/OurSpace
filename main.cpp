@@ -5,14 +5,70 @@
 #include <string>
 #include <typeinfo>
 #include <boost/algorithm/string.hpp>
+#include <algorithm>
 
 using namespace std;
+
+int len;
+
+class entry
+{
+    public:
+
+        string name;
+        string sapID;
+        string gender;
+        string dateOfBirth;
+        string interests;
+        string program;
+        string branch;
+        string commitees;
+        int noOfCommitees;
+} e[100];
+
+void init()
+{
+    // Using fstream to get file pointer
+    ifstream file("db.json");
+    Json::Value actualJson;
+    Json::Reader reader;
+    Json::FastWriter fastWriter;
+
+    // Using reader to parse json
+    reader.parse(file, actualJson);
+    len = actualJson.size();
+
+    // entry e[len];
+    for (int i=0; i<len; i++)
+    {
+        string name = fastWriter.write(actualJson[i]["Name"]);
+        string sap_id = fastWriter.write(actualJson[i]["SAP ID"]);
+        string gender = fastWriter.write(actualJson[i]["Gender"]);
+        string date_of_birth = fastWriter.write(actualJson[i]["Date Of Birth"]);
+        string interests = fastWriter.write(actualJson[i]["Interests"]);
+        string program = fastWriter.write(actualJson[i]["Program"]);
+        string branch = fastWriter.write(actualJson[i]["Branch"]);
+        string commitees = fastWriter.write(actualJson[i]["Commitees"]);
+        e[i].name = name;
+        e[i].sapID = sap_id;
+        e[i].gender = gender;
+        e[i].dateOfBirth = date_of_birth;
+        e[i].interests = interests;
+        e[i].program = program;
+        e[i].branch = branch;
+        e[i].commitees = commitees;
+
+        std::string::difference_type n = std::count(commitees.begin(), commitees.end(), ',');
+        e[i].noOfCommitees = n+1;
+    }
+}
 
 void Clear()
 {
     cout << "\x1B[2J\x1B[H";
+    cout << "\x1B[2J\x1B[H";
+    cout << "\x1B[2J\x1B[H";
 }
-
 
 int welcome()
 {
@@ -24,9 +80,11 @@ int welcome()
     cout << "\n";
     cout << "1 - Name\n";
     cout << "2 - SAP ID\n";
-    cout << "3 - Gender\n";
-    cout << "4 - Date Of Birth\n";
-    cout << "5 - Interests\n";
+    cout << "3 - Date Of Birth\n";
+    cout << "4 - Interests\n";
+    cout << "5 - Program\n";
+    cout << "6 - Branch\n";
+    cout << "7 - Commitees\n";
     cout << "\n";
     cout << "Type 10 to EXIT\n";
     cout << "\n";
@@ -35,318 +93,81 @@ int welcome()
     return input;
 }
 
-
-void name()
+void search(string field)
 {
     Clear();
-
-    // Using fstream to get file pointer
-    ifstream file("db.json");
-    Json::Value actualJson;
-    Json::Reader reader;
-    Json::FastWriter fastWriter;
-
-    // Using reader to parse json
-    reader.parse(file, actualJson);
-
-    //Variables
-    bool found = false;
-    int count = 0;
     string key;
-
-    //Input
-    cout << "Name to search: ";
+    cout << "Enter " << field << " to search: ";
     cin >> key;
     cout << "\n\n";
-
-    cout << " \n-----------------------------------------------------------------\n\n\n";
-
-    //Converting JSON to String
-    for (int i=0; i < 100; i++)
+    bool found = false;
+    int count = 0;
+    for (int i = 0; i < len; i++)
     {
-        string name = fastWriter.write(actualJson[i]["Name"]);
-        string sap_id = fastWriter.write(actualJson[i]["SAP ID"]);
-        string gender = fastWriter.write(actualJson[i]["Gender"]);
-        string date_of_birth = fastWriter.write(actualJson[i]["Date Of Birth"]);
-        string interests = fastWriter.write(actualJson[i]["Interests"]);
+        string tempName; 
+        if (field == "name")
+        {
+            tempName = e[i].name;
+        }
+        else if (field == "SAP ID")
+            {
+                tempName = e[i].sapID; 
+            }
+        else if (field == "date of birth")
+            {
+                tempName = e[i].dateOfBirth;
+            }
+        else if (field == "interests")
+            {
+                tempName = e[i].interests;
+            }
+        else if (field == "program")
+            {
+                tempName = e[i].program;
+            }
+        else if (field == "branch")
+            {
+                tempName = e[i].branch;
+            }
+        else if (field == "commitees")
+            {
+                tempName = e[i].commitees;
+            }
 
-        //Search
-        string tempName = name;
         boost::algorithm::to_lower(tempName);
         boost::algorithm::to_lower(key);
         if (strstr(tempName.c_str(), key.c_str()))
         {
             found = true;
             count++;
+            cout << endl;
+            cout << endl;
             cout << count << ". " << endl;
             cout << endl;
-            cout << "Name: " << name << endl;
-            cout << "SAP ID: " << sap_id << endl;
-            cout << "Gender: " << gender << endl;
-            cout << "Date Of Birth: " << date_of_birth << endl;
-            cout << "Interests: " << interests << endl;
-            cout << endl;
+            cout << "Name: " << e[i].name << endl;
+            cout << "SAP ID: " << e[i].sapID << endl;
+            cout << "Gender: " << e[i].gender << endl;
+            cout << "Date Of Birth: " << e[i].dateOfBirth << endl;
+            cout << "Interests: " << e[i].interests << endl;
+            cout << "Program: " << e[i].program << endl;
+            cout << "Branch: " << e[i].branch<< endl;
+            cout << "Commitees: " << e[i].commitees << endl;
+
+            if (e[i].noOfCommitees > 2)
+                {
+                    cout << "**  THIS STUDENT IS IN MORE THAN 2 COMMITEES  **" << endl << endl;
+                }
         }
     }
-
     if (!found)
     {
         cout << "No students matching the search :/\n\n";
     }
-
-    cout << " \n-----------------------------------------------------------------\n";
 }
-
-
-void sap_id()
-{
-    Clear();
-
-    // Using fstream to get file pointer
-    ifstream file("db.json");
-    Json::Value actualJson;
-    Json::Reader reader;
-    Json::FastWriter fastWriter;
-
-    // Using reader to parse json
-    reader.parse(file, actualJson);
-
-    //Variables
-    bool found = false;
-    int count = 0;
-    string key;
-
-    //Input
-    cout << "SAP ID to search: ";
-    cin >> key;
-    cout << "\n\n";
-
-    cout << " \n-----------------------------------------------------------------\n\n\n";
-
-    //Converting JSON to String
-    for (int i=0; i < 100; i++)
-    {
-        string name = fastWriter.write(actualJson[i]["Name"]);
-        string sap_id = fastWriter.write(actualJson[i]["SAP ID"]);
-        string gender = fastWriter.write(actualJson[i]["Gender"]);
-        string date_of_birth = fastWriter.write(actualJson[i]["Date Of Birth"]);
-        string interests = fastWriter.write(actualJson[i]["Interests"]);
-
-        //Search
-        string tempSapID = sap_id;
-        boost::algorithm::to_lower(tempSapID);
-        boost::algorithm::to_lower(key);
-        if (strstr(tempSapID.c_str(), key.c_str()))
-        {
-            found = true;
-            count++;
-            cout << count << ". " << endl;
-            cout << endl;
-            cout << "Name: " << name << endl;
-            cout << "SAP ID: " << sap_id << endl;
-            cout << "Gender: " << gender << endl;
-            cout << "Date Of Birth: " << date_of_birth << endl;
-            cout << "Interests: " << interests << endl;
-            cout << endl;
-        }
-    }
-
-    if (!found)
-    {
-        cout << "No students matching the search :/\n\n";
-    }
-
-    cout << " \n-----------------------------------------------------------------\n";
-}
-
-
-void gender()
-{
-    Clear();
-
-    // Using fstream to get file pointer
-    ifstream file("db.json");
-    Json::Value actualJson;
-    Json::Reader reader;
-    Json::FastWriter fastWriter;
-
-    // Using reader to parse json
-    reader.parse(file, actualJson);
-
-    //Variables
-    bool found = false;
-    int count = 0;
-    string key;
-
-    //Input
-    cout << "Gender to search: ";
-    cin >> key;
-    cout << "\n\n";
-
-    cout << " \n-----------------------------------------------------------------\n\n\n";
-
-    //Converting JSON to String
-    for (int i=0; i < 100; i++)
-    {
-        string name = fastWriter.write(actualJson[i]["Name"]);
-        string sap_id = fastWriter.write(actualJson[i]["SAP ID"]);
-        string gender = fastWriter.write(actualJson[i]["Gender"]);
-        string date_of_birth = fastWriter.write(actualJson[i]["Date Of Birth"]);
-        string interests = fastWriter.write(actualJson[i]["Interests"]);
-
-        //Search
-        string tempGender = gender;
-        boost::algorithm::to_lower(tempGender);
-        boost::algorithm::to_lower(key);
-        if (strstr(tempGender.c_str(), key.c_str()))
-        {
-            found = true;
-            count++;
-            cout << count << ". " << endl;
-            cout << endl;
-            cout << "Name: " << name << endl;
-            cout << "SAP ID: " << sap_id << endl;
-            cout << "Gender: " << gender << endl;
-            cout << "Date Of Birth: " << date_of_birth << endl;
-            cout << "Interests: " << interests << endl;
-            cout << endl;
-        }
-    }
-
-    if (!found)
-    {
-        cout << "No students matching the search :/\n\n";
-    }
-
-    cout << " \n-----------------------------------------------------------------\n";
-}
-
-
-void date_of_birth()
-{
-    Clear();
-
-    // Using fstream to get file pointer
-    ifstream file("db.json");
-    Json::Value actualJson;
-    Json::Reader reader;
-    Json::FastWriter fastWriter;
-
-    // Using reader to parse json
-    reader.parse(file, actualJson);
-
-    //Variables
-    bool found = false;
-    int count = 0;
-    string key;
-
-    //Input
-    cout << "Date Of Birth to search: ";
-    cin >> key;
-    cout << "\n\n";
-
-    cout << " \n-----------------------------------------------------------------\n\n\n";
-
-    //Converting JSON to String
-    for (int i=0; i < 100; i++)
-    {
-        string name = fastWriter.write(actualJson[i]["Name"]);
-        string sap_id = fastWriter.write(actualJson[i]["SAP ID"]);
-        string gender = fastWriter.write(actualJson[i]["Gender"]);
-        string date_of_birth = fastWriter.write(actualJson[i]["Date Of Birth"]);
-        string interests = fastWriter.write(actualJson[i]["Interests"]);
-
-        //Search
-        string tempDateOfBirth = date_of_birth;
-        boost::algorithm::to_lower(tempDateOfBirth);
-        boost::algorithm::to_lower(key);
-        if (strstr(tempDateOfBirth.c_str(), key.c_str()))
-        {
-            found = true;
-            count++;
-            cout << count << ". " << endl;
-            cout << endl;
-            cout << "Name: " << name << endl;
-            cout << "SAP ID: " << sap_id << endl;
-            cout << "Gender: " << gender << endl;
-            cout << "Date Of Birth: " << date_of_birth << endl;
-            cout << "Interests: " << interests << endl;
-            cout << endl;
-        }
-    }
-
-    if (!found)
-    {
-        cout << "No students matching the search :/\n\n";
-    }
-
-    cout << " \n-----------------------------------------------------------------\n";
-}
-
-void interests()
-{
-    Clear();
-
-    // Using fstream to get file pointer
-    ifstream file("db.json");
-    Json::Value actualJson;
-    Json::Reader reader;
-    Json::FastWriter fastWriter;
-
-    // Using reader to parse json
-    reader.parse(file, actualJson);
-
-    // Variables
-    bool found = false;
-    int count = 0;
-    string key;
-
-    // Input
-    cout << "Interests to search: ";
-    cin >> key;
-    cout << "\n\n";
-
-    cout << " \n-----------------------------------------------------------------\n\n\n";
-
-    // Converting JSON to String
-    for (int i = 0; i < 100; i++)
-    {
-        string name = fastWriter.write(actualJson[i]["Name"]);
-        string sap_id = fastWriter.write(actualJson[i]["SAP ID"]);
-        string gender = fastWriter.write(actualJson[i]["Gender"]);
-        string date_of_birth = fastWriter.write(actualJson[i]["Date Of Birth"]);
-        string interests = fastWriter.write(actualJson[i]["Interests"]);
-
-        // Search
-        string tempInterests = interests;
-        boost::algorithm::to_lower(tempInterests);
-        boost::algorithm::to_lower(key);
-        if (strstr(tempInterests.c_str(), key.c_str()))
-        {
-            found = true;
-            count++;
-            cout << count << ". " << endl;
-            cout << endl;
-            cout << "Name: " << name << endl;
-            cout << "SAP ID: " << sap_id << endl;
-            cout << "Gender: " << gender << endl;
-            cout << "Date Of Birth: " << date_of_birth << endl;
-            cout << "Interests: " << interests << endl;
-            cout << endl;
-        }
-    }
-
-    if (!found)
-    {
-        cout << "No students matching the search :/\n\n";
-    }
-
-    cout << " \n-----------------------------------------------------------------\n";
-}
-
 
 int main()
 {
+    init();
     Clear();
     int choice = welcome();
     Clear();
@@ -358,25 +179,33 @@ int main()
             break;
 
         case 1:
-            name();
+            search("name");
             break;
-        
+
         case 2:
-            sap_id();
+            search("SAP ID");
             break;
-        
+
         case 3:
-            gender();
+            search("date of birth");
             break;
-        
+
         case 4:
-            date_of_birth();
+            search("interests");
             break;
-        
+
         case 5:
-            interests();
+            search("program");
             break;
-        
+
+        case 6:
+            search("branch");
+            break;
+
+        case 7:
+            search("commitees");
+            break;
+
         default:
             cout << "\n\n\nWrong input!\nTry again...\n";
             break;
