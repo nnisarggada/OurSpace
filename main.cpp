@@ -38,7 +38,6 @@ void init()
     reader.parse(file, actualJson);
     len = actualJson.size();
 
-    // entry e[len];
     for (int i=0; i<len; i++)
     {
         string name = fastWriter.write(actualJson[i]["Name"]);
