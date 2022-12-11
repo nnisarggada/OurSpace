@@ -1,5 +1,7 @@
 #Custom
 *.json
+*.docx
+presentation.md
 
 # Prerequisites
 *.d

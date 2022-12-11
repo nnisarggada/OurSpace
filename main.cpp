@@ -3,9 +3,7 @@
 #include <json/json.h>
 #include <fstream>
 #include <string>
-#include <typeinfo>
 #include <boost/algorithm/string.hpp>
-#include <algorithm>
 
 using namespace std;
 
