@@ -1,6 +1,8 @@
 #Custom
 *.json
 *.docx
+*.pdf
+*.html
 presentation.md
 
 # Prerequisites
